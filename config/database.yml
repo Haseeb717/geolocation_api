@@ -29,7 +29,7 @@ development:
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
   # the same name as the operating system user running Rails.
-  #username: geolocation_api
+  #username: stripe_webhook_app
 
   # The password associated with the postgres role (username).
   #password:
@@ -51,7 +51,6 @@ development:
   #   log, notice, warning, error, fatal, and panic
   # Defaults to warning.
   #min_messages: notice
-
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
@@ -82,5 +81,5 @@ test:
 production:
   <<: *default
   database: geolocation_api_production
-  username: geolocation_api
-  password: <%= ENV["GEOLOCATION_API_DATABASE_PASSWORD"] %>
+  username: geolocation_api_app
+  password: <%= ENV["GEOLOCATION_API_APP_DATABASE_PASSWORD"] %>
