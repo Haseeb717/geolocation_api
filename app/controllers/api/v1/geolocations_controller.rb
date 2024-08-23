@@ -24,11 +24,31 @@ module Api
         provider = params[:provider] || 'ipstack' # Default to ipstack if no provider is specified
 
         begin
-          @geolocation = Providers::GeolocationService.call(
+          mapped_data = Providers::GeolocationService.call(
             provider, geolocation_params[:ip_address] || geolocation_params[:url]
           )
 
+          @geolocation = Geolocation.new(mapped_data)
+
           if @geolocation.save
+            render_success_response
+          else
+            render_error_response(@geolocation.errors.full_messages)
+          end
+        rescue Providers::Exceptions::GeolocationError => e
+          render_error_response(e.message)
+        end
+      end
+
+      def update
+        provider = params[:provider] || 'ipstack'
+
+        begin
+          mapped_data = Providers::GeolocationService.call(
+            provider, geolocation_params[:ip_address] || geolocation_params[:url]
+          )
+
+          if @geolocation.update(mapped_data)
             render_success_response
           else
             render_error_response(@geolocation.errors.full_messages)
