@@ -7,6 +7,9 @@ class CreateUsers < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+    # Add an index to ensure email uniqueness
     add_index :users, :email, unique: true
+    # Add an index for API key lookup
+    add_index :users, :api_key, unique: true
   end
 end
