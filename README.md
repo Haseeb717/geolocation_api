@@ -31,10 +31,10 @@ Welcome to the Geolocation App! This application allows users to fetch and manag
 
 ### Prerequisites
 To run this application, you'll need:
-- Ruby (version X.X.X)
-- Rails (version X.X.X)
-- PostgreSQL (version X.X.X)
-- Docker (optional)
+- Ruby (version 3.2.0)
+- Rails (version 7.0.8)
+- PostgreSQL (version 14)
+- Docker
 
 ## Setting Up the Environment
 ### 1. Clone the Repository
