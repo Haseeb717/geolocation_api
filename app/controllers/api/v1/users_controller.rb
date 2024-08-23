@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # app/controllers/users_controller.rb
 
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :authenticate_user, only: [:show_api_key, :regenerate_api_key]
+      before_action :authenticate_user, only: %i[show_api_key regenerate_api_key]
 
       def create
         user = User.new(user_params)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/services/providers/geolocation_service.rb
 
 require 'api_client'
@@ -31,16 +33,12 @@ module Providers
       raise NotImplementedError, 'This method should be overridden in a subclass'
     end
 
-    private
-
     def self.find_provider(provider)
       provider_class = PROVIDERS[provider.to_sym]
 
-      if provider_class.present?
-        provider_class.constantize.new
-      else
-        raise Providers::Exceptions::UnsupportedProviderError.new(provider)
-      end
+      raise Providers::Exceptions::UnsupportedProviderError, provider unless provider_class.present?
+
+      provider_class.constantize.new
     end
 
     def self.ip_address?(input)

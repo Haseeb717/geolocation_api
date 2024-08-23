@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/services/providers/new_provider_service.rb
 module Providers
   class NewProviderService < GeolocationService

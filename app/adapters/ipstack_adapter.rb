@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/adapters/ipstack_adapter.rb
 class IpstackAdapter
   def initialize(data)
