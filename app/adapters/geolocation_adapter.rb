@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/adapters/geolocation_adapter.rb
 class GeolocationAdapter
   def initialize(provider, data)
@@ -15,7 +17,7 @@ class GeolocationAdapter
     case @provider.to_sym
     when :ipstack
       IpstackAdapter
-    # when :another_provider
+      # when :another_provider
       # AnotherProviderAdapter
     else
       raise "Adapter for provider #{@provider} not implemented"

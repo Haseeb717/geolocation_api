@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/serializers/geolocation_serializer.rb
 
 class GeolocationSerializer

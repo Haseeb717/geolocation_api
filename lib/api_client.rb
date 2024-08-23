@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/api_client.rb
 require 'httparty'
 
@@ -7,7 +9,7 @@ class ApiClient
   default_timeout 15
 
   def self.get(url, headers = {})
-    response = HTTParty.get(url, headers: headers)
+    response = HTTParty.get(url, headers:)
     handle_response(response)
   rescue Net::OpenTimeout, Net::ReadTimeout
     raise Providers::Exceptions::ServiceError, 'API request timed out'
@@ -16,8 +18,6 @@ class ApiClient
   rescue StandardError => e
     raise Providers::Exceptions::ServiceError, "Unexpected error occurred: #{e.message}"
   end
-
-  private
 
   def self.handle_response(response)
     case response.code
@@ -29,6 +29,7 @@ class ApiClient
   end
 
   def self.handle_error(response)
-    raise Providers::Exceptions::ServiceError, "API Request failed with response code #{response.code}: #{response.message}"
+    raise Providers::Exceptions::ServiceError,
+          "API Request failed with response code #{response.code}: #{response.message}"
   end
 end

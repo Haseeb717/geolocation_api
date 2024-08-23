@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/controllers/api/v1/geolocations_controller.rb
 
 module Api
@@ -6,7 +8,7 @@ module Api
       include Authenticable
 
       before_action :authorize_request
-      before_action :set_geolocation, only: [:show, :destroy]
+      before_action :set_geolocation, only: %i[show destroy]
 
       def index
         geolocations = Geolocation.all
@@ -22,18 +24,17 @@ module Api
         provider = params[:provider] || 'ipstack' # Default to ipstack if no provider is specified
 
         begin
-          geolocation_data = Providers::GeolocationService.call(provider, geolocation_params[:ip_address] || geolocation_params[:url])
-
-          @geolocation = Geolocation.new(geolocation_data.merge(geolocation_params))
+          @geolocation = Providers::GeolocationService.call(
+            provider, geolocation_params[:ip_address] || geolocation_params[:url]
+          )
 
           if @geolocation.save
-            render json: GeolocationSerializer.new(@geolocation).serialized_json, status: :created
+            render_success_response
           else
-            render json: { error: @geolocation.errors.full_messages }, status: :unprocessable_entity
+            render_error_response(@geolocation.errors.full_messages)
           end
-
         rescue Providers::Exceptions::GeolocationError => e
-          render json: { error: e.message }, status: :unprocessable_entity
+          render_error_response(e.message)
         end
       end
 
@@ -52,6 +53,14 @@ module Api
         @geolocation = Geolocation.find(params[:id])
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Geolocation not found' }, status: :not_found
+      end
+
+      def render_success_response
+        render json: GeolocationSerializer.new(@geolocation).serialized_json, status: :created
+      end
+
+      def render_error_response(error_message)
+        render json: { error: error_message }, status: :unprocessable_entity
       end
     end
   end
