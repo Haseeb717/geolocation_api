@@ -2,7 +2,6 @@
 
 AllCops:
   Exclude:
-    - 'spec/**/*_spec.rb'
     - 'Rakefile'
     - '*/.rake'
     - 'bin/*'
@@ -23,3 +22,7 @@ Style/Documentation:
 Metrics/MethodLength:
   Exclude:
     - db/migrate/*
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*_spec.rb'
