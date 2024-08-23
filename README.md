@@ -52,9 +52,13 @@ cp .env_example .env
 Edit .env with your Stripe keys:
 
 **IPSTACK_API_KEY**: Your IPSTACK api key. You can get it from api-keys on [IPSTACK website](https://ipstack.com/)
+
 **DATABASE_USERNAME**: Your Postgresql username
+
 **DATABASE_PASSWORD**: Your Postgresql password
+
 **DATABASE_NAME**: Database name you wanna add
+
 **DATABASE_HOST**: Localhost or Db host ip
 
 
