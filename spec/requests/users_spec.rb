@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
@@ -23,7 +25,7 @@ RSpec.describe 'Users API', type: :request do
 
     context 'when the request is invalid' do
       it 'returns a 422 response for missing password' do
-        post '/api/v1/users', params: { user: { email: 'user@example.com' } }  # Missing password
+        post '/api/v1/users', params: { user: { email: 'user@example.com' } } # Missing password
         expect(response).to have_http_status(422)
         expect(json['errors']).to include("Password can't be blank")
       end
@@ -43,7 +45,9 @@ RSpec.describe 'Users API', type: :request do
   end
 
   describe 'POST /api/v1/users/show_api_key' do
-    let!(:user) { create(:user, email: 'user@example.com', password: 'password123', password_confirmation: 'password123') }
+    let!(:user) do
+      create(:user, email: 'user@example.com', password: 'password123', password_confirmation: 'password123')
+    end
 
     context 'when the credentials are valid' do
       before { post '/api/v1/users/show_api_key', params: { email: user.email, password: 'password123' } }
@@ -66,7 +70,9 @@ RSpec.describe 'Users API', type: :request do
   end
 
   describe 'POST /api/v1/users/regenerate_api_key' do
-    let!(:user) { create(:user, email: 'user@example.com', password: 'password123', password_confirmation: 'password123') }
+    let!(:user) do
+      create(:user, email: 'user@example.com', password: 'password123', password_confirmation: 'password123')
+    end
 
     context 'when the credentials are valid' do
       before { post '/api/v1/users/regenerate_api_key', params: { email: user.email, password: 'password123' } }
