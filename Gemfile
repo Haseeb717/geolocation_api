@@ -40,6 +40,7 @@ gem "bcrypt", "~> 3.1.7"
 gem 'fast_jsonapi'
 
 gem "httparty"
+gem 'rswag'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem "rack-cors"
@@ -50,8 +51,9 @@ group :development, :test do
   gem 'byebug'
 end
 
-group :development do
-  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
+group :test do
+  gem 'rspec-rails'
+  gem 'factory_bot_rails'
+  gem 'shoulda-matchers'
 end
 
