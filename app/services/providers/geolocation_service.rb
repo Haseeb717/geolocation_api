@@ -19,8 +19,12 @@ module Providers
         ip = resolve_ip_from_url(ip_or_url)
         service.get_location(ip)
       else
-        raise ArgumentError, 'Invalid IP address or URL'
+        raise Providers::Exceptions::InvalidInputError, 'Invalid IP address or URL'
       end
+    rescue Providers::Exceptions::GeolocationError => e
+      raise e
+    rescue StandardError => e
+      raise Providers::Exceptions::ServiceError, "An unexpected error occurred: #{e.message}"
     end
 
     def get_location(ip_or_url)

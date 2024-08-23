@@ -20,17 +20,20 @@ module Api
 
       def create
         provider = params[:provider] || 'ipstack' # Default to ipstack if no provider is specified
-        data = Providers::GeolocationService.call(provider, geolocation_params[:ip_address] || geolocation_params[:url])
 
-        if data
-          geolocation = Geolocation.new(data.merge(geolocation_params))
-          if geolocation.save
-            render json: geolocation, status: :created
+        begin
+          geolocation_data = Providers::GeolocationService.call(provider, geolocation_params[:ip_address] || geolocation_params[:url])
+
+          @geolocation = Geolocation.new(geolocation_data.merge(geolocation_params))
+
+          if @geolocation.save
+            render json: GeolocationSerializer.new(@geolocation).serialized_json, status: :created
           else
-            render json: { error: geolocation.errors.full_messages }, status: :unprocessable_entity
+            render json: { error: @geolocation.errors.full_messages }, status: :unprocessable_entity
           end
-        else
-          render json: { error: 'Failed to fetch geolocation data' }, status: :unprocessable_entity
+
+        rescue Providers::Exceptions::GeolocationError => e
+          render json: { error: e.message }, status: :unprocessable_entity
         end
       end
 
@@ -47,6 +50,8 @@ module Api
 
       def set_geolocation
         @geolocation = Geolocation.find(params[:id])
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: 'Geolocation not found' }, status: :not_found
       end
     end
   end

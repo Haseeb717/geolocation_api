@@ -4,17 +4,17 @@ require 'httparty'
 class ApiClient
   include HTTParty
 
-  # Default options for HTTParty
   default_timeout 15
 
   def self.get(url, headers = {})
     response = HTTParty.get(url, headers: headers)
-
     handle_response(response)
   rescue Net::OpenTimeout, Net::ReadTimeout
-    raise StandardError, 'API request timed out'
+    raise Providers::Exceptions::ServiceError, 'API request timed out'
   rescue HTTParty::Error => e
-    raise StandardError, "HTTParty error occurred: #{e.message}"
+    raise Providers::Exceptions::ServiceError, "HTTParty error occurred: #{e.message}"
+  rescue StandardError => e
+    raise Providers::Exceptions::ServiceError, "Unexpected error occurred: #{e.message}"
   end
 
   private
@@ -29,6 +29,6 @@ class ApiClient
   end
 
   def self.handle_error(response)
-    raise StandardError, "API Request failed with response code #{response.code}: #{response.message}"
+    raise Providers::Exceptions::ServiceError, "API Request failed with response code #{response.code}: #{response.message}"
   end
 end

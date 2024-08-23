@@ -7,6 +7,8 @@ Rails.application.routes.draw do
           post 'regenerate_api_key'
         end
       end
+
+      resources :geolocations
     end
   end
 end

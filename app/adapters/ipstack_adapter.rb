@@ -5,7 +5,7 @@ class IpstackAdapter
   end
 
   def call
-    {
+    Geolocation.new(
       ip_address: @data['ip'],
       country: @data['country_name'],
       region_name: @data['region_name'],
@@ -13,6 +13,6 @@ class IpstackAdapter
       zip: @data['zip'],
       latitude: @data['latitude'],
       longitude: @data['longitude']
-    }
+    )
   end
 end
