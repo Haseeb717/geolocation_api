@@ -9,6 +9,8 @@ paths:
       summary: list geolocations
       tags:
       - Geolocations
+      security:
+      - Bearer: []
       responses:
         '200':
           description: successful
@@ -17,6 +19,8 @@ paths:
       tags:
       - Geolocations
       parameters: []
+      security:
+      - Bearer: []
       responses:
         '201':
           description: created
@@ -50,6 +54,8 @@ paths:
       summary: show geolocation
       tags:
       - Geolocations
+      security:
+      - Bearer: []
       responses:
         '200':
           description: successful
@@ -59,6 +65,8 @@ paths:
       summary: delete geolocation
       tags:
       - Geolocations
+      security:
+      - Bearer: []
       responses:
         '204':
           description: successful
@@ -79,16 +87,21 @@ paths:
             schema:
               type: object
               properties:
-                email:
-                  type: string
-                password:
-                  type: string
-                password_confirmation:
-                  type: string
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+                  required:
+                  - email
+                  - password
+                  - password_confirmation
               required:
-              - email
-              - password
-              - password_confirmation
+              - user
   "/api/v1/users/show_api_key":
     get:
       summary: show API key
@@ -138,7 +151,14 @@ paths:
               - email
               - password
 servers:
-- url: https://{defaultHost}
+- url: http://{defaultHost}
   variables:
     defaultHost:
-      default: www.example.com
+      default: localhost:3000
+components:
+  securitySchemes:
+    Bearer:
+      description: API key necessary to use API calls
+      type: apiKey
+      name: Authorization
+      in: header

@@ -15,14 +15,9 @@ module Providers
 
     def self.call(provider, ip_or_url)
       service = find_provider(provider)
-      if ip_address?(ip_or_url)
-        service.get_location(ip_or_url)
-      elsif url?(ip_or_url)
-        ip = resolve_ip_from_url(ip_or_url)
-        service.get_location(ip)
-      else
-        raise Providers::Exceptions::InvalidInputError, 'Invalid IP address or URL'
-      end
+      ip = extract_ip(ip_or_url)
+
+      service.get_location(ip)
     rescue Providers::Exceptions::GeolocationError => e
       raise e
     rescue StandardError => e
@@ -60,6 +55,16 @@ module Providers
       Resolv.getaddress(uri.host)
     rescue Resolv::ResolvError => e
       raise ArgumentError, "Unable to resolve IP address from URL: #{e.message}"
+    end
+
+    def self.extract_ip(ip_or_url)
+      if ip_address?(ip_or_url)
+        ip_or_url
+      elsif url?(ip_or_url)
+        resolve_ip_from_url(ip_or_url)
+      else
+        raise Providers::Exceptions::InvalidInputError, 'Invalid IP address or URL'
+      end
     end
   end
 end

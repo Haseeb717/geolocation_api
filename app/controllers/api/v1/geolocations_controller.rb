@@ -12,6 +12,9 @@ module Api
 
       def index
         geolocations = Geolocation.all
+        geolocations = geolocations.where(ip_address: params[:ip_address]) if params[:ip_address].present?
+        geolocations = geolocations.page(params[:page]).per(params[:per_page])
+
         render json: GeolocationSerializer.new(geolocations).serialized_json
       end
 
@@ -20,7 +23,7 @@ module Api
         render json: GeolocationSerializer.new(geolocation).serialized_json
       end
 
-      def create
+      def create # rubocop:disable Metrics/MethodLength
         provider = params[:provider] || 'ipstack' # Default to ipstack if no provider is specified
 
         begin
@@ -40,7 +43,7 @@ module Api
         end
       end
 
-      def update
+      def update # rubocop:disable Metrics/MethodLength
         provider = params[:provider] || 'ipstack'
 
         begin
