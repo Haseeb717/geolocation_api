@@ -3,27 +3,32 @@ require 'swagger_helper'
 RSpec.describe 'Users API', type: :request do
 
   path '/api/v1/users' do
-
     post('create user') do
       tags 'Users'
       consumes 'application/json'
       parameter name: :user, in: :body, schema: {
         type: :object,
         properties: {
-          email: { type: :string },
-          password: { type: :string },
-          password_confirmation: { type: :string }
+          user: {
+            type: :object, # This should be an object
+            properties: {
+              email: { type: :string },
+              password: { type: :string },
+              password_confirmation: { type: :string }
+            },
+            required: ['email', 'password', 'password_confirmation']
+          }
         },
-        required: ['email', 'password', 'password_confirmation']
+        required: ['user'] # Ensure that the user object is required
       }
 
       response(201, 'created') do
-        let(:user) { { email: 'user@example.com', password: 'password', password_confirmation: 'password' } }
+        let(:user) { { user: { email: 'user@example.com', password: 'password', password_confirmation: 'password' } } }
         run_test!
       end
 
       response(422, 'unprocessable entity') do
-        let(:user) { { email: 'user@example.com' } }
+        let(:user) { { user: { email: 'user@example.com' } } } # This must match the schema structure
         run_test!
       end
     end

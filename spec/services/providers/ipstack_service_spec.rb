@@ -33,7 +33,7 @@ RSpec.describe Providers::IpstackService, type: :service do
 
       expect do
         service.get_location(valid_ip)
-      end.to raise_error(Providers::Exceptions::ServiceError, 'Failed to fetch data from AnotherProvider')
+      end.to raise_error(Providers::Exceptions::ServiceError, 'Failed to fetch data from Ipstack')
     end
   end
 end

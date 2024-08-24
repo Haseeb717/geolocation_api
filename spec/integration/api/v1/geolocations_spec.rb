@@ -1,12 +1,13 @@
 require 'swagger_helper'
 
 RSpec.describe 'Geolocations API', type: :request do
+  let(:api_key) { 'valid_api_key' } # Replace with a valid API key for the test user
 
   path '/api/v1/geolocations' do
-
     get('list geolocations') do
       tags 'Geolocations'
       produces 'application/json'
+      security [Bearer: []]
 
       response(200, 'successful') do
         run_test!
@@ -25,6 +26,7 @@ RSpec.describe 'Geolocations API', type: :request do
         },
         required: ['provider']
       }
+      security [Bearer: []]
 
       response(201, 'created') do
         let(:geolocation) { { provider: 'ipstack', ip_address: '95.91.246.12' } }
@@ -44,6 +46,7 @@ RSpec.describe 'Geolocations API', type: :request do
     get('show geolocation') do
       tags 'Geolocations'
       produces 'application/json'
+      security [Bearer: []]
 
       response(200, 'successful') do
         let(:id) { Geolocation.create!(provider: 'ipstack', ip_address: '95.91.246.12').id }
@@ -59,6 +62,7 @@ RSpec.describe 'Geolocations API', type: :request do
     delete('delete geolocation') do
       tags 'Geolocations'
       produces 'application/json'
+      security [Bearer: []]
 
       response(204, 'successful') do
         let(:id) { Geolocation.create!(provider: 'ipstack', ip_address: '95.91.246.12').id }
