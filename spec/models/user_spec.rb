@@ -31,6 +31,14 @@ RSpec.describe User, type: :model do
       subject.password = nil
       expect(subject).not_to be_valid
     end
+
+    it 'is valid with a valid email format' do
+      valid_emails = ['user@example.com', 'user.name@example.co.uk', 'user+tag@example.io']
+      valid_emails.each do |valid_email|
+        subject.email = valid_email
+        expect(subject).to be_valid
+      end
+    end
   end
 
   describe '#regenerate_api_key' do

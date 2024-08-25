@@ -42,6 +42,8 @@ gem 'fast_jsonapi'
 gem "httparty"
 gem 'rswag'
 
+gem 'kaminari'
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem "rack-cors"
 
@@ -55,5 +57,6 @@ group :test do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
   gem 'shoulda-matchers'
+  gem 'faker'
 end
 

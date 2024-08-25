@@ -7,8 +7,8 @@ module Api
     class GeolocationsController < ApplicationController
       include Authenticable
 
-      before_action :authorize_request
-      before_action :set_geolocation, only: %i[show destroy]
+      # before_action :authorize_request
+      before_action :set_geolocation, only: %i[show destroy update]
 
       def index
         geolocations = Geolocation.all
@@ -19,8 +19,7 @@ module Api
       end
 
       def show
-        geolocation = Geolocation.find(params[:id])
-        render json: GeolocationSerializer.new(geolocation).serialized_json
+        render json: GeolocationSerializer.new(@geolocation).serialized_json
       end
 
       def create # rubocop:disable Metrics/MethodLength
@@ -38,7 +37,7 @@ module Api
           else
             render_error_response(@geolocation.errors.full_messages)
           end
-        rescue Providers::Exceptions::GeolocationError => e
+        rescue Providers::Errors::GeolocationError => e
           render_error_response(e.message)
         end
       end
@@ -47,16 +46,14 @@ module Api
         provider = params[:provider] || 'ipstack'
 
         begin
-          mapped_data = Providers::GeolocationService.call(
-            provider, geolocation_params[:ip_address] || geolocation_params[:url]
-          )
+          mapped_data = Providers::GeolocationService.call(provider, @geolocation.ip_address)
 
           if @geolocation.update(mapped_data)
             render_success_response
           else
             render_error_response(@geolocation.errors.full_messages)
           end
-        rescue Providers::Exceptions::GeolocationError => e
+        rescue Providers::Errors::GeolocationError => e
           render_error_response(e.message)
         end
       end
@@ -73,7 +70,7 @@ module Api
       end
 
       def set_geolocation
-        @geolocation = Geolocation.find(params[:id])
+        @geolocation = Geolocation.find_by!(ip_address: params[:ip_address])
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Geolocation not found' }, status: :not_found
       end

@@ -10,7 +10,13 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :geolocations
+      resources :geolocations, param: :ip_address, except: [:edit] do
+        constraints(ip_address: /[^\/]+/) do
+          get :show, on: :member
+          put :update, on: :member
+          delete :destroy, on: :member
+        end
+      end
     end
   end
 end

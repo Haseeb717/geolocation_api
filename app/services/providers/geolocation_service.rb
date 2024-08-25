@@ -18,10 +18,10 @@ module Providers
       ip = extract_ip(ip_or_url)
 
       service.get_location(ip)
-    rescue Providers::Exceptions::GeolocationError => e
+    rescue Errors::GeolocationError => e
       raise e
     rescue StandardError => e
-      raise Providers::Exceptions::ServiceError, "An unexpected error occurred: #{e.message}"
+      raise Errors::ServiceError, "An unexpected error occurred: #{e.message}"
     end
 
     def get_location(ip_or_url)
@@ -31,7 +31,7 @@ module Providers
     def self.find_provider(provider)
       provider_class = PROVIDERS[provider.to_sym]
 
-      raise Providers::Exceptions::UnsupportedProviderError, provider unless provider_class.present?
+      raise Errors::UnsupportedProviderError, "This #{provider} is not supported" unless provider_class.present?
 
       provider_class.constantize.new
     end
@@ -63,7 +63,7 @@ module Providers
       elsif url?(ip_or_url)
         resolve_ip_from_url(ip_or_url)
       else
-        raise Providers::Exceptions::InvalidInputError, 'Invalid IP address or URL'
+        raise Errors::InvalidInputError, 'Invalid IP address or URL'
       end
     end
   end

@@ -10,7 +10,7 @@ module Providers
       url = "#{API_URL}#{ip_or_url}?access_key=#{ACCESS_KEY}"
       response_data = ApiClient.get(url)
 
-      raise Providers::Exceptions::ServiceError, 'Failed to fetch data from Ipstack' unless response_data
+      raise Errors::ServiceError, 'Failed to fetch data from Ipstack' unless response_data
 
       GeolocationAdapter.new('ipstack', response_data).adapt
     end

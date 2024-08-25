@@ -34,26 +34,27 @@ paths:
               properties:
                 provider:
                   type: string
+                  nullable: true
                 ip_address:
                   type: string
-                  nullable: true
+                  nullable: false
                 url:
                   type: string
                   nullable: true
               required:
-              - provider
-  "/api/v1/geolocations/{id}":
-    parameters:
-    - name: id
-      in: path
-      description: ID of the geolocation
-      required: true
-      schema:
-        type: string
+              - ip_address
+  "/api/v1/geolocations/{ip_address}":
     get:
       summary: show geolocation
       tags:
       - Geolocations
+      parameters:
+      - name: ip_address
+        in: path
+        description: IP Address of the geolocation
+        required: true
+        schema:
+          type: string
       security:
       - Bearer: []
       responses:
@@ -61,6 +62,28 @@ paths:
           description: successful
         '404':
           description: not found
+    put:
+      summary: update geolocation
+      tags:
+      - Geolocations
+      parameters:
+      - name: ip_address
+        in: path
+        description: IP Address of the geolocation
+        required: true
+        schema:
+          type: string
+      security:
+      - Bearer: []
+      responses:
+        '200':
+          description: successful
+        '404':
+          description: not found
+        '422':
+          description: unprocessable entity
+        '500':
+          description: geolocation error
     delete:
       summary: delete geolocation
       tags:
