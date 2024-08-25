@@ -19,6 +19,7 @@ Welcome to the Geolocation App! This application allows users to fetch and manag
 - API key management
 - Geolocation fetching based on user input
 - Swagger documentation for the API
+- Multiple providers support. New providers can easily added. Current implementations is for ipstack
 
 ## Technologies Used
 - Ruby on Rails
