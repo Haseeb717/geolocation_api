@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'swagger_helper'
 
 RSpec.describe 'Users API', type: :request do
-
   path '/api/v1/users' do
     post('create user') do
       tags 'Users'
@@ -16,7 +17,7 @@ RSpec.describe 'Users API', type: :request do
               password: { type: :string },
               password_confirmation: { type: :string }
             },
-            required: ['email', 'password', 'password_confirmation']
+            required: %w[email password password_confirmation]
           }
         },
         required: ['user'] # Ensure that the user object is required
@@ -35,7 +36,6 @@ RSpec.describe 'Users API', type: :request do
   end
 
   path '/api/v1/users/show_api_key' do
-
     get('show API key') do
       tags 'Users'
       consumes 'application/json'
@@ -46,7 +46,7 @@ RSpec.describe 'Users API', type: :request do
           email: { type: :string },
           password: { type: :string }
         },
-        required: ['email', 'password']
+        required: %w[email password]
       }
 
       response(200, 'successful') do
@@ -62,7 +62,6 @@ RSpec.describe 'Users API', type: :request do
   end
 
   path '/api/v1/users/regenerate_api_key' do
-
     post('regenerate API key') do
       tags 'Users'
       consumes 'application/json'
@@ -73,7 +72,7 @@ RSpec.describe 'Users API', type: :request do
           email: { type: :string },
           password: { type: :string }
         },
-        required: ['email', 'password']
+        required: %w[email password]
       }
 
       response(200, 'successful') do

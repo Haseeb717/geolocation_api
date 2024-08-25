@@ -4,7 +4,6 @@
 
 require 'rails_helper'
 require 'api_client'
-require_relative '../../../app/exceptions/providers/errors'
 
 RSpec.describe Providers::GeolocationService, type: :service do
   let(:provider) { :ipstack }
@@ -41,7 +40,7 @@ RSpec.describe Providers::GeolocationService, type: :service do
       it 'raises an InvalidInputError' do
         expect do
           Providers::GeolocationService.call(provider, invalid_input)
-        end.to raise_error(Providers::Exceptions::InvalidInputError, 'Invalid IP address or URL')
+        end.to raise_error(Providers::Errors::InvalidInputError, 'Invalid IP address or URL')
       end
     end
 
@@ -49,18 +48,18 @@ RSpec.describe Providers::GeolocationService, type: :service do
       it 'raises an UnsupportedProviderError' do
         expect do
           Providers::GeolocationService.call(:unsupported_provider, valid_ip)
-        end.to raise_error(Providers::Exceptions::UnsupportedProviderError)
+        end.to raise_error(Providers::Errors::UnsupportedProviderError)
       end
     end
 
     context 'when there is a service error' do
       it 'raises a ServiceError' do
         allow_any_instance_of(Providers::IpstackService).to receive(:get_location)
-          .and_raise(Providers::Exceptions::GeolocationError)
+          .and_raise(Providers::Errors::GeolocationError)
 
         expect do
           Providers::GeolocationService.call(provider, valid_ip)
-        end.to raise_error(Providers::Exceptions::GeolocationError)
+        end.to raise_error(Providers::Errors::GeolocationError)
       end
 
       it 'raises a ServiceError for unexpected errors' do
@@ -69,7 +68,7 @@ RSpec.describe Providers::GeolocationService, type: :service do
 
         expect do
           Providers::GeolocationService.call(provider, valid_ip)
-        end.to raise_error(Providers::Exceptions::ServiceError, /An unexpected error occurred/)
+        end.to raise_error(Providers::Errors::ServiceError, /An unexpected error occurred/)
       end
     end
   end

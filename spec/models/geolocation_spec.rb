@@ -27,10 +27,15 @@ RSpec.describe Geolocation, type: :model do
     end
 
     it 'is not valid with a duplicate ip_address' do
-      Geolocation.create!(ip_address:, latitude:, longitude:, city:,
-                          country:)
+      Geolocation.create!(ip_address:, latitude:, longitude:, city:, country:)
       expect(subject).to_not be_valid
       expect(subject.errors[:ip_address]).to include('has already been taken')
+    end
+
+    it 'is not valid with an invalid ip_address format' do
+      subject.ip_address = 'invalid_ip'
+      expect(subject).to_not be_valid
+      expect(subject.errors[:ip_address]).to include('must be a valid IPv4 address')
     end
 
     it 'is not valid without latitude' do
@@ -55,6 +60,30 @@ RSpec.describe Geolocation, type: :model do
       subject.country = nil
       expect(subject).to_not be_valid
       expect(subject.errors[:country]).to include("can't be blank")
+    end
+
+    it 'is not valid with latitude less than -90' do
+      subject.latitude = -91
+      expect(subject).to_not be_valid
+      expect(subject.errors[:latitude]).to include('must be greater than or equal to -90')
+    end
+
+    it 'is not valid with latitude greater than 90' do
+      subject.latitude = 91
+      expect(subject).to_not be_valid
+      expect(subject.errors[:latitude]).to include('must be less than or equal to 90')
+    end
+
+    it 'is not valid with longitude less than -180' do
+      subject.longitude = -181
+      expect(subject).to_not be_valid
+      expect(subject.errors[:longitude]).to include('must be greater than or equal to -180')
+    end
+
+    it 'is not valid with longitude greater than 180' do
+      subject.longitude = 181
+      expect(subject).to_not be_valid
+      expect(subject.errors[:longitude]).to include('must be less than or equal to 180')
     end
   end
 end
